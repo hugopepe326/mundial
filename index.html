@@ -37,6 +37,11 @@
   --relief-shadow: 0 4px 0 rgba(0,0,0,0.25), 0 6px 12px rgba(0,0,0,0.25);
   --relief-shadow-hover: 0 6px 0 rgba(0,0,0,0.28), 0 10px 20px rgba(0,0,0,0.3);
   --relief-shadow-active: 0 2px 0 rgba(0,0,0,0.25), 0 3px 6px rgba(0,0,0,0.25);
+  --live-gradient-start: #f97316;
+  --live-gradient-end: #ea580c;
+  --live-shadow: 0 5px 0 #9a3412, 0 8px 24px rgba(249,115,22,0.25);
+  --live-shadow-hover: 0 8px 0 #9a3412, 0 12px 32px rgba(249,115,22,0.35);
+  --live-shadow-active: 0 2px 0 #9a3412, 0 4px 12px rgba(249,115,22,0.2);
 }
 
 .light {
@@ -66,6 +71,11 @@
   --relief-shadow: 0 4px 0 var(--relief-dark), 0 6px 12px rgba(0,0,0,0.1);
   --relief-shadow-hover: 0 6px 0 var(--relief-dark), 0 10px 20px rgba(0,0,0,0.12);
   --relief-shadow-active: 0 2px 0 var(--relief-dark), 0 3px 6px rgba(0,0,0,0.1);
+  --live-gradient-start: #fb923c;
+  --live-gradient-end: #f97316;
+  --live-shadow: 0 5px 0 #c2410c, 0 8px 24px rgba(249,115,22,0.2);
+  --live-shadow-hover: 0 8px 0 #c2410c, 0 12px 32px rgba(249,115,22,0.28);
+  --live-shadow-active: 0 2px 0 #c2410c, 0 4px 12px rgba(249,115,22,0.15);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -96,6 +106,225 @@
 .btn-relief:active {
   transform:translateY(2px);
   box-shadow:var(--relief-shadow-active), inset 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.btn-live {
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  border:none;
+  border-radius:9999px;
+  padding:0.55rem 1rem 0.55rem 0.85rem;
+  font-weight:700;
+  font-size:0.8rem;
+  color:white;
+  cursor:pointer;
+  background:linear-gradient(180deg, var(--live-gradient-start) 0%, var(--live-gradient-end) 100%);
+  box-shadow:var(--live-shadow), inset 0 1px 0 rgba(255,255,255,0.25);
+  transition:all 0.15s ease;
+  transform:translateY(0);
+  animation:pulse-live 2s cubic-bezier(0.4,0,0.6,1) infinite;
+}
+.btn-live::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -2px 0 rgba(0,0,0,0.15);
+  pointer-events:none;
+}
+.btn-live:hover {
+  transform:translateY(-3px);
+  box-shadow:var(--live-shadow-hover), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-live:active {
+  transform:translateY(2px);
+  box-shadow:var(--live-shadow-active), inset 0 2px 4px rgba(0,0,0,0.15);
+}
+.btn-live .live-pulse {
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ffffff;
+  box-shadow:0 0 0 0 rgba(255,255,255,0.7);
+  animation:livePulse 1.5s infinite;
+}
+@keyframes livePulse {
+  0% { box-shadow:0 0 0 0 rgba(255,255,255,0.7); }
+  70% { box-shadow:0 0 0 8px rgba(255,255,255,0); }
+  100% { box-shadow:0 0 0 0 rgba(255,255,255,0); }
+}
+@keyframes pulse-live {
+  0%,100% { filter:brightness(1); }
+  50% { filter:brightness(1.08); }
+}
+
+.live-dropdown-wrap {
+  position:relative;
+  z-index:120;
+}
+
+.live-dropdown {
+  position:absolute;
+  top:calc(100% + 0.6rem);
+  right:0;
+  width:min(92vw, 380px);
+  max-height:70vh;
+  transform-origin:top right;
+  background:var(--bg-card);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border-color);
+  border-radius:1rem;
+  box-shadow:0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 var(--relief-light);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-10px) scale(0.98);
+  transition:all 0.2s ease;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.live-dropdown.open {
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0) scale(1);
+}
+@media (max-width:640px) {
+  .live-dropdown {
+    position:fixed;
+    top:3.75rem;
+    right:0.5rem;
+    left:0.5rem;
+    width:auto;
+    transform-origin:top center;
+  }
+}
+.live-dropdown-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.75rem;
+  padding:0.75rem 1rem;
+  border-bottom:1px solid var(--border-color);
+  background:rgba(59,130,246,0.06);
+}
+.live-dropdown-list {
+  padding:0.5rem;
+  overflow-y:auto;
+  max-height:55vh;
+}
+.live-dropdown-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.5rem;
+  padding:0.65rem 0.75rem;
+  margin-bottom:0.4rem;
+  background:var(--match-card-bg);
+  border:1px solid var(--border-color);
+  border-radius:0.75rem;
+  box-shadow:0 4px 0 rgba(0,0,0,0.1), inset 0 1px 0 var(--relief-light);
+  cursor:pointer;
+  transition:all 0.15s ease;
+  transform:translateY(0);
+}
+.live-dropdown-item:hover {
+  transform:translateY(-2px);
+  border-color:var(--border-hover);
+  box-shadow:0 6px 0 rgba(0,0,0,0.12), 0 6px 16px rgba(59,130,246,0.08), inset 0 1px 0 var(--relief-light);
+}
+.live-dropdown-item:active {
+  transform:translateY(2px);
+  box-shadow:0 2px 0 rgba(0,0,0,0.1), inset 0 2px 4px rgba(0,0,0,0.06);
+}
+.live-dropdown-item .team-name { font-weight:600; font-size:0.85rem; color:var(--text-heading); }
+.live-dropdown-item .team-flag { font-size:1.15rem; }
+.live-dropdown-item .time { font-size:0.7rem; font-weight:700; color:#f97316; white-space:nowrap; }
+
+.live-detail-panel {
+  position:absolute;
+  inset:0;
+  background:var(--bg-card);
+  display:flex;
+  flex-direction:column;
+  padding:0.75rem;
+  overflow-y:auto;
+  transition:transform 0.25s ease;
+}
+.live-detail-panel.hidden { transform:translateX(100%); pointer-events:none; }
+.live-detail-panel:not(.hidden) { transform:translateX(0); }
+.live-back-btn {
+  align-self:flex-start;
+  margin-bottom:0.75rem;
+  padding:0.35rem 0.75rem;
+  border-radius:0.5rem;
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--text-secondary);
+  background:var(--tab-bg);
+  border:1px solid var(--tab-border);
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.live-back-btn:hover { background:var(--tab-active-bg); color:var(--text-heading); }
+.live-detail-content {
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+}
+.live-detail-teams {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  padding:1rem;
+  background:var(--match-card-bg);
+  border:1px solid var(--border-color);
+  border-radius:1rem;
+  box-shadow:0 5px 0 rgba(0,0,0,0.1), inset 0 1px 0 var(--relief-light);
+}
+.live-detail-team {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.35rem;
+  flex:1;
+}
+.live-detail-team .flag { font-size:2.5rem; }
+.live-detail-team .name { font-size:0.85rem; font-weight:700; color:var(--text-heading); text-align:center; }
+.live-detail-score {
+  font-size:2rem;
+  font-weight:900;
+  color:#f97316;
+  text-shadow:0 2px 10px rgba(249,115,22,0.25);
+}
+.live-detail-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+  font-size:0.75rem;
+  color:var(--text-secondary);
+}
+.live-detail-meta span {
+  padding:0.35rem 0.7rem;
+  border-radius:999px;
+  background:var(--tab-bg);
+  border:1px solid var(--tab-border);
+}
+.live-detail-status {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  padding:0.5rem;
+  border-radius:0.75rem;
+  background:rgba(34,197,94,0.08);
+  border:1px solid rgba(34,197,94,0.2);
+  color:#22c55e;
+  font-size:0.8rem;
+  font-weight:700;
 }
 
 html { scroll-behavior:smooth; }
@@ -921,6 +1150,26 @@ body {
           <a href="#llave" class="section-nav-btn px-3 py-1.5 rounded-lg transition-colors" style="color:var(--text-secondary);">Eliminatoria</a>
         </nav>
         <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          <div class="live-dropdown-wrap" id="liveDropdownWrap">
+            <button id="liveTopBtn" onclick="event.stopPropagation(); toggleLiveDropdown()" class="btn-live hidden" aria-haspopup="true" aria-expanded="false" aria-label="Ver partidos en vivo">
+              <span class="live-pulse"></span>
+              <span class="hidden sm:inline">EN VIVO</span>
+              <span class="sm:hidden">VIVO</span>
+              <span id="liveTopCount">0</span>
+            </button>
+            <div id="liveDropdown" class="live-dropdown" aria-hidden="true">
+              <div class="live-dropdown-header">
+                <span class="live-dot" style="width:10px;height:10px;"></span>
+                <span class="text-sm font-bold" style="color:var(--text-heading);">En vivo</span>
+                <span class="text-xs" style="color:var(--text-secondary);">Tiempo real</span>
+              </div>
+              <div class="live-dropdown-list" id="liveDropdownList"></div>
+              <div id="liveDetailPanel" class="live-detail-panel hidden">
+                <button onclick="backToLiveList()" class="live-back-btn">← Volver al listado</button>
+                <div id="liveDetailContent"></div>
+              </div>
+            </div>
+          </div>
           <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema"><span id="themeIcon">🌙</span></button>
           <button onclick="openMobileMenu()" class="btn-relief md:hidden p-2" style="color:var(--text-secondary);" aria-label="Abrir menú">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -1712,8 +1961,10 @@ function renderMatchCard(m) {
     badge = `<span class="result-badge">${m.result}</span>`;
     statusLabel = 'Final';
   } else if (m.status === 'live') {
-    badge = `<span class="result-badge live">${m.result}</span>`;
-    statusLabel = 'En vivo';
+    const status = getLiveStatus(m);
+    const score = m.result !== '–' ? m.result : '—';
+    badge = `<span class="result-badge live">${score}</span>`;
+    statusLabel = status ? `${status.minute}' En vivo` : 'En vivo';
     liveClass = ' live-match';
   } else {
     badge = `<span class="result-badge pending">${m.time}</span>`;
@@ -1952,12 +2203,201 @@ function showToast(html) {
 }
 
 // ------------------------------------------------------------
+// LIVE ENGINE
+// ------------------------------------------------------------
+let liveMatches = [];
+let selectedLiveMatch = null;
+let liveDropdownOpen = false;
+
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const shortMonthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+function getMatchDate(dateStr) {
+  const parts = dateStr.split(' ');
+  const day = parseInt(parts[0]) || 1;
+  const monthName = parts[1];
+  const monthIndex = shortMonthNames.indexOf(monthName);
+  if (monthIndex < 0) return null;
+  return new Date(2026, monthIndex, day);
+}
+
+function getMatchDateTime(dateStr, timeStr) {
+  const date = getMatchDate(dateStr);
+  if (!date || !timeStr) return null;
+  const [h, m] = timeStr.split(':').map(Number);
+  date.setHours(h || 0, m || 0, 0, 0);
+  return date;
+}
+
+function formatShortDate(date) {
+  const day = date.getDate();
+  const month = shortMonthNames[date.getMonth()];
+  return `${day} ${month}`;
+}
+
+function getTodayString() {
+  return formatShortDate(new Date());
+}
+
+function getLiveStatus(m) {
+  const now = new Date();
+  const start = getMatchDateTime(m.date, m.time);
+
+  // Solo se considera "en vivo" si no hay resultado final y está dentro del horario del partido
+  if (m.status === 'final' || (m.result && m.result !== '–')) return null;
+  if (!start) return null;
+  if (now < start) return null;
+
+  const diffMs = now - start;
+  const minutes = Math.floor(diffMs / 60000);
+
+  // Duración máxima considerada "en vivo": 105 minutos (90 + descuento/intervalo)
+  if (minutes >= 105) return null;
+
+  return { label: 'En vivo', minute: Math.min(minutes, 90) };
+}
+
+function refreshLiveMatches() {
+  const today = getTodayString();
+  // Restaurar estado de partidos del día que no estén finalizados
+  matchesData.forEach(m => {
+    if (m.date === today && m.status !== 'final' && (!m.result || m.result === '–')) {
+      m.status = 'pending';
+    }
+  });
+  // Solo conservar los que efectivamente están en vivo
+  liveMatches = matchesData.filter(m => getLiveStatus(m) !== null);
+  liveMatches.forEach(m => { m.status = 'live'; });
+  updateLiveTopButton();
+  updateLiveCount();
+}
+
+function updateLiveTopButton() {
+  const btn = $('liveTopBtn');
+  const count = liveMatches.length;
+  if (count > 0) {
+    btn.classList.remove('hidden');
+    $('liveTopCount').textContent = count;
+  } else {
+    btn.classList.add('hidden');
+    closeLiveDropdown();
+  }
+}
+
+function renderLiveDropdown() {
+  const list = $('liveDropdownList');
+  if (!liveMatches.length) {
+    list.innerHTML = `<div class="text-center py-6 text-xs" style="color:var(--text-secondary);">No hay partidos en vivo en este momento.</div>`;
+    return;
+  }
+  list.innerHTML = liveMatches.map((m, i) => {
+    const status = getLiveStatus(m);
+    const minute = status ? status.minute : 0;
+    return `
+      <div class="live-dropdown-item" onclick="selectLiveMatch(${i})">
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <span class="team-flag">${m.localFlag}</span>
+          <span class="team-name truncate">${escapeHtml(m.local)}</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="time">${minute}'</span>
+        </div>
+        <div class="flex items-center gap-2 flex-1 min-w-0 justify-end">
+          <span class="team-name truncate">${escapeHtml(m.visitor)}</span>
+          <span class="team-flag">${m.visitorFlag}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectLiveMatch(index) {
+  selectedLiveMatch = liveMatches[index];
+  if (!selectedLiveMatch) return;
+  renderLiveDetail();
+  $('liveDetailPanel').classList.remove('hidden');
+}
+
+function backToLiveList() {
+  $('liveDetailPanel').classList.add('hidden');
+  selectedLiveMatch = null;
+}
+
+function renderLiveDetail() {
+  const container = $('liveDetailContent');
+  const m = selectedLiveMatch;
+  if (!m) return;
+  const status = getLiveStatus(m);
+  const minute = status ? status.minute : 0;
+  container.innerHTML = `
+    <div class="live-detail-teams">
+      <div class="live-detail-team">
+        <span class="flag">${m.localFlag}</span>
+        <span class="name">${escapeHtml(m.local)}</span>
+      </div>
+      <div class="live-detail-score">—</div>
+      <div class="live-detail-team">
+        <span class="flag">${m.visitorFlag}</span>
+        <span class="name">${escapeHtml(m.visitor)}</span>
+      </div>
+    </div>
+    <div class="live-detail-status">
+      <span class="live-dot"></span>
+      <span>En vivo · ${minute}'</span>
+    </div>
+    <div class="live-detail-meta">
+      <span>📅 ${m.date} · ${m.time}</span>
+      <span>🏟 ${escapeHtml(m.venue)}</span>
+      <span>Grupo ${m.group}</span>
+    </div>
+    <div class="text-xs text-center" style="color:var(--text-secondary);">
+      Marcador no disponible en tiempo real. Se muestra el tiempo de juego según la hora actual.
+    </div>
+  `;
+}
+
+function toggleLiveDropdown() {
+  liveDropdownOpen = !liveDropdownOpen;
+  const dropdown = $('liveDropdown');
+  const btn = $('liveTopBtn');
+  if (liveDropdownOpen) {
+    renderLiveDropdown();
+    dropdown.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', closeLiveDropdownOutside);
+  } else {
+    closeLiveDropdown();
+  }
+}
+
+function closeLiveDropdown() {
+  liveDropdownOpen = false;
+  $('liveDropdown').classList.remove('open');
+  $('liveTopBtn').setAttribute('aria-expanded', 'false');
+  backToLiveList();
+  document.removeEventListener('click', closeLiveDropdownOutside);
+}
+
+function closeLiveDropdownOutside(e) {
+  const wrap = $('liveDropdownWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    closeLiveDropdown();
+  }
+}
+
+function updateLiveCount() {
+  const liveCount = matchesData.filter(m => m.status === 'live').length;
+  $('liveCount').textContent = liveCount;
+}
+
+// ------------------------------------------------------------
 // INIT
 // ------------------------------------------------------------
 function init() {
   buildSearchIndex();
   setTheme(getTheme());
   renderMatches();
+  refreshLiveMatches();
   renderBracket();
   renderNews();
   renderStats();
@@ -1966,6 +2406,16 @@ function init() {
   updateLiveCount();
 
   setTimeout(renderCharts, 300);
+
+  // Re-evaluar partidos en vivo cada minuto para mantener estados fehacientes
+  setInterval(() => {
+    refreshLiveMatches();
+    renderMatches();
+    if (liveDropdownOpen) {
+      renderLiveDropdown();
+      if (selectedLiveMatch) renderLiveDetail();
+    }
+  }, 60000);
 
   window.addEventListener('scroll', () => {
     $('scrollTop').classList.toggle('visible', window.scrollY > 400);
