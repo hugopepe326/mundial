@@ -32,6 +32,11 @@
   --news-bg: rgba(15,23,42,0.5);
   --stat-bar-bg: rgba(148,163,184,0.1);
   --search-bg: rgba(15,23,42,0.8);
+  --relief-light: rgba(255,255,255,0.08);
+  --relief-dark: rgba(0,0,0,0.35);
+  --relief-shadow: 0 4px 0 rgba(0,0,0,0.25), 0 6px 12px rgba(0,0,0,0.25);
+  --relief-shadow-hover: 0 6px 0 rgba(0,0,0,0.28), 0 10px 20px rgba(0,0,0,0.3);
+  --relief-shadow-active: 0 2px 0 rgba(0,0,0,0.25), 0 3px 6px rgba(0,0,0,0.25);
 }
 
 .light {
@@ -56,9 +61,42 @@
   --news-bg: rgba(255,255,255,0.6);
   --stat-bar-bg: rgba(148,163,184,0.15);
   --search-bg: rgba(255,255,255,0.9);
+  --relief-light: rgba(255,255,255,0.6);
+  --relief-dark: rgba(0,0,0,0.12);
+  --relief-shadow: 0 4px 0 var(--relief-dark), 0 6px 12px rgba(0,0,0,0.1);
+  --relief-shadow-hover: 0 6px 0 var(--relief-dark), 0 10px 20px rgba(0,0,0,0.12);
+  --relief-shadow-active: 0 2px 0 var(--relief-dark), 0 3px 6px rgba(0,0,0,0.1);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
+
+.btn-relief {
+  position:relative;
+  border:none;
+  border-radius:0.75rem;
+  background:linear-gradient(180deg, var(--relief-light) 0%, var(--tab-bg) 100%);
+  box-shadow:var(--relief-shadow), inset 0 1px 0 var(--relief-light);
+  transition:all 0.15s ease;
+  transform:translateY(0);
+  cursor:pointer;
+}
+.btn-relief::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  box-shadow:inset 0 1px 0 var(--relief-light), inset 0 -2px 0 var(--relief-dark);
+  opacity:0.6;
+  pointer-events:none;
+}
+.btn-relief:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--relief-shadow-hover), inset 0 1px 0 var(--relief-light);
+}
+.btn-relief:active {
+  transform:translateY(2px);
+  box-shadow:var(--relief-shadow-active), inset 0 2px 4px rgba(0,0,0,0.15);
+}
 
 html { scroll-behavior:smooth; }
 
@@ -77,22 +115,39 @@ body {
   border:1px solid var(--border-color);
   border-radius:1rem;
   transition:all 0.3s ease;
+  box-shadow:0 6px 0 rgba(0,0,0,0.15), 0 8px 24px var(--card-shadow), inset 0 1px 0 var(--relief-light);
 }
-.bg-card:hover { border-color:var(--border-hover); box-shadow:0 8px 32px var(--card-shadow); }
+.bg-card:hover {
+  border-color:var(--border-hover);
+  box-shadow:0 8px 0 rgba(0,0,0,0.18), 0 12px 36px var(--card-shadow), inset 0 1px 0 var(--relief-light);
+  transform:translateY(-2px);
+}
 
 .wave-fill { fill:var(--bg-primary); }
 
 .group-tab {
-  transition:all 0.3s ease;
+  transition:all 0.15s ease;
   cursor:pointer;
   user-select:none;
   -webkit-tap-highlight-color:transparent;
+  background:var(--tab-bg);
+  border:1px solid var(--tab-border);
+  border-radius:0.65rem;
+  box-shadow:0 4px 0 rgba(0,0,0,0.18), inset 0 1px 0 var(--relief-light);
+  transform:translateY(0);
 }
-.group-tab:hover { transform:translateY(-2px); }
+.group-tab:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 0 rgba(0,0,0,0.2), inset 0 1px 0 var(--relief-light);
+}
 .group-tab.active {
   background:var(--tab-active-bg);
   border-color:var(--tab-active-border);
-  box-shadow:0 4px 20px rgba(59,130,246,0.15);
+  box-shadow:0 4px 0 rgba(37,99,235,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.group-tab:active {
+  transform:translateY(2px);
+  box-shadow:0 1px 0 rgba(0,0,0,0.18), inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .group-tabs-scroll {
@@ -106,18 +161,28 @@ body {
 .group-tabs-scroll::-webkit-scrollbar { display:none; }
 
 .match-card {
-  transition:all 0.3s ease;
+  transition:all 0.2s ease;
   background:var(--match-card-bg);
   border:1px solid var(--border-color);
   border-radius:0.75rem;
+  box-shadow:0 5px 0 rgba(0,0,0,0.14), inset 0 1px 0 var(--relief-light);
+  transform:translateY(0);
 }
-.match-card:hover { transform:translateX(4px); border-color:var(--border-hover); }
-.match-card.live-match { border-color:rgba(239,68,68,0.3); }
-.match-card.live-match:hover { border-color:rgba(239,68,68,0.5); }
+.match-card:hover {
+  transform:translateX(4px) translateY(-2px);
+  border-color:var(--border-hover);
+  box-shadow:0 7px 0 rgba(0,0,0,0.16), 0 8px 20px rgba(59,130,246,0.1), inset 0 1px 0 var(--relief-light);
+}
+.match-card:active {
+  transform:translateX(2px) translateY(2px);
+  box-shadow:0 2px 0 rgba(0,0,0,0.14), inset 0 2px 4px rgba(0,0,0,0.08);
+}
+.match-card.live-match { border-color:rgba(239,68,68,0.3); box-shadow:0 5px 0 rgba(220,38,38,0.18), inset 0 1px 0 var(--relief-light); }
+.match-card.live-match:hover { border-color:rgba(239,68,68,0.5); box-shadow:0 7px 0 rgba(220,38,38,0.22), 0 8px 20px rgba(239,68,68,0.1), inset 0 1px 0 var(--relief-light); }
 
 @media (max-width:640px) {
-  .match-card:hover { transform:none; }
-  .match-card:active { transform:scale(0.98); }
+  .match-card:hover { transform:translateY(-2px); }
+  .match-card:active { transform:translateY(2px) scale(0.98); }
 }
 
 .team-flag { display:inline-flex; align-items:center; gap:0.35rem; }
@@ -179,10 +244,21 @@ body {
   border:1px solid var(--border-color);
   border-radius:0.65rem;
   padding:0.55rem 0.75rem;
-  transition:all 0.3s ease;
+  transition:all 0.2s ease;
   position:relative;
+  box-shadow:0 5px 0 rgba(0,0,0,0.14), inset 0 1px 0 var(--relief-light);
+  transform:translateY(0);
 }
-.bracket-match:hover { border-color:var(--border-hover); background:var(--bg-card-hover); }
+.bracket-match:hover {
+  border-color:var(--border-hover);
+  background:var(--bg-card-hover);
+  transform:translateY(-3px);
+  box-shadow:0 8px 0 rgba(0,0,0,0.16), 0 10px 24px rgba(59,130,246,0.1), inset 0 1px 0 var(--relief-light);
+}
+.bracket-match:active {
+  transform:translateY(2px);
+  box-shadow:0 2px 0 rgba(0,0,0,0.14), inset 0 2px 4px rgba(0,0,0,0.08);
+}
 .bracket-match .team { display:flex; align-items:center; justify-content:space-between; padding:0.2rem 0; }
 .bracket-match .team:first-child { border-bottom:1px solid var(--border-color); margin-bottom:0.2rem; }
 .bracket-match.winner { border-color:#eab308; background:rgba(234,179,8,0.08); }
@@ -204,11 +280,35 @@ body {
 ::-webkit-scrollbar-thumb:hover { background:rgba(59,130,246,0.5); }
 
 .filter-btn {
-  transition:all 0.2s ease;
+  transition:all 0.15s ease;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  background:var(--tab-bg);
+  border:1px solid var(--tab-border);
+  border-radius:0.65rem;
+  box-shadow:0 4px 0 rgba(0,0,0,0.16), inset 0 1px 0 var(--relief-light);
+  transform:translateY(0);
 }
-.filter-btn.active { background:#2563eb; color:white; border-color:#2563eb; }
+.filter-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 0 rgba(0,0,0,0.18), inset 0 1px 0 var(--relief-light);
+}
+.filter-btn:active {
+  transform:translateY(2px);
+  box-shadow:0 1px 0 rgba(0,0,0,0.16), inset 0 2px 4px rgba(0,0,0,0.08);
+}
+.filter-btn.active {
+  background:linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  color:white;
+  border-color:#1d4ed8;
+  box-shadow:0 4px 0 #1e40af, inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.filter-btn.active:hover {
+  box-shadow:0 6px 0 #1e40af, inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.filter-btn.active:active {
+  box-shadow:0 1px 0 #1e40af, inset 0 2px 4px rgba(0,0,0,0.15);
+}
 
 .filter-scroll {
   display:flex;
@@ -239,38 +339,57 @@ body {
   right:1.25rem;
   width:2.75rem;
   height:2.75rem;
-  background:rgba(59,130,246,0.2);
+  background:linear-gradient(180deg, rgba(96,165,250,0.35) 0%, rgba(59,130,246,0.2) 100%);
   border:1px solid rgba(59,130,246,0.3);
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  transition:all 0.3s ease;
+  transition:all 0.2s ease;
   opacity:0;
   pointer-events:none;
   z-index:50;
   backdrop-filter:blur(8px);
+  box-shadow:0 5px 0 rgba(30,58,138,0.35), 0 8px 20px rgba(59,130,246,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform:translateY(0);
 }
 .scroll-top.visible { opacity:1; pointer-events:auto; }
-.scroll-top:hover { background:rgba(59,130,246,0.3); transform:translateY(-2px); }
+.scroll-top:hover {
+  background:linear-gradient(180deg, rgba(96,165,250,0.45) 0%, rgba(59,130,246,0.3) 100%);
+  transform:translateY(-3px);
+  box-shadow:0 8px 0 rgba(30,58,138,0.38), 0 12px 28px rgba(59,130,246,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.scroll-top:active {
+  transform:translateY(2px);
+  box-shadow:0 2px 0 rgba(30,58,138,0.35), inset 0 2px 4px rgba(0,0,0,0.1);
+}
 
 .theme-toggle {
   width:2.75rem;
   height:2.75rem;
   border-radius:50%;
   border:1px solid var(--border-color);
-  background:var(--bg-card);
+  background:linear-gradient(180deg, var(--relief-light) 0%, var(--bg-card) 100%);
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  transition:all 0.3s ease;
+  transition:all 0.2s ease;
   font-size:1.2rem;
   -webkit-tap-highlight-color:transparent;
+  box-shadow:0 5px 0 rgba(0,0,0,0.18), inset 0 1px 0 var(--relief-light);
+  transform:translateY(0);
 }
-.theme-toggle:hover { border-color:var(--border-hover); transform:rotate(15deg); }
-.theme-toggle:active { transform:scale(0.92); }
+.theme-toggle:hover {
+  border-color:var(--border-hover);
+  transform:translateY(-3px) rotate(15deg);
+  box-shadow:0 8px 0 rgba(0,0,0,0.2), 0 10px 24px var(--card-shadow), inset 0 1px 0 var(--relief-light);
+}
+.theme-toggle:active {
+  transform:translateY(2px) rotate(0deg);
+  box-shadow:0 2px 0 rgba(0,0,0,0.18), inset 0 2px 4px rgba(0,0,0,0.1);
+}
 
 .news-ticker-wrap {
   overflow:hidden;
@@ -307,14 +426,26 @@ body {
 .form-l { background:#ef4444; }
 
 .section-nav-btn {
-  transition:all 0.3s ease;
+  transition:all 0.2s ease;
   cursor:pointer;
   border-bottom:2px solid transparent;
-  padding-bottom:0.25rem;
+  padding:0.35rem 0.75rem 0.25rem;
+  border-radius:0.5rem;
   -webkit-tap-highlight-color:transparent;
+  box-shadow:0 3px 0 transparent;
 }
-.section-nav-btn.active { border-bottom-color:#3b82f6; color:#60a5fa; }
-.section-nav-btn:hover { color:var(--text-primary); }
+.section-nav-btn.active {
+  border-bottom-color:#3b82f6;
+  color:#60a5fa;
+  background:rgba(59,130,246,0.1);
+  box-shadow:0 3px 0 rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.section-nav-btn:hover {
+  color:var(--text-primary);
+  background:rgba(59,130,246,0.06);
+  transform:translateY(-1px);
+}
+.section-nav-btn:active { transform:translateY(1px); }
 
 .mobile-menu {
   position:fixed;
@@ -455,9 +586,14 @@ body {
   display:flex;
   align-items:center;
   gap:0.5rem;
+  background:var(--search-bg);
 }
 .search-item:last-child { border-bottom:none; border-radius:0 0 1rem 1rem; }
-.search-item:hover, .search-item.active { background:rgba(59,130,246,0.1); }
+.search-item:hover, .search-item.active {
+  background:linear-gradient(180deg, rgba(59,130,246,0.12) 0%, rgba(59,130,246,0.06) 100%);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.05);
+}
+.search-item:active { box-shadow:inset 0 3px 6px rgba(0,0,0,0.1); }
 .search-item .label {
   font-size:0.65rem;
   text-transform:uppercase;
@@ -716,20 +852,20 @@ body {
   <div id="mobileMenu" class="mobile-menu">
     <div class="flex items-center justify-between mb-6">
       <span class="font-bold text-lg" style="color:var(--text-heading);">Menú</span>
-      <button onclick="closeMobileMenu()" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors" style="color:var(--text-secondary);" aria-label="Cerrar menú">
+      <button onclick="closeMobileMenu()" class="btn-relief p-1.5" style="color:var(--text-secondary);" aria-label="Cerrar menú">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     <nav class="flex flex-col gap-2" aria-label="Menú móvil">
-      <a href="#grupos" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-sm font-medium" style="color:var(--text-primary);">🏆 Grupos</a>
-      <a href="#partidos" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-sm font-medium" style="color:var(--text-primary);">⚽ Partidos</a>
-      <a href="#noticias" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-sm font-medium" style="color:var(--text-primary);">📰 Noticias</a>
-      <a href="#estadisticas" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-sm font-medium" style="color:var(--text-primary);">📊 Estadísticas</a>
-      <a href="#llave" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl hover:bg-white/5 transition-colors text-sm font-medium" style="color:var(--text-primary);">🏆 Llave final</a>
+      <a href="#grupos" onclick="closeMobileMenu()" class="btn-relief px-4 py-3 text-sm font-medium" style="color:var(--text-primary);">🏆 Grupos</a>
+      <a href="#partidos" onclick="closeMobileMenu()" class="btn-relief px-4 py-3 text-sm font-medium" style="color:var(--text-primary);">⚽ Partidos</a>
+      <a href="#noticias" onclick="closeMobileMenu()" class="btn-relief px-4 py-3 text-sm font-medium" style="color:var(--text-primary);">📰 Noticias</a>
+      <a href="#estadisticas" onclick="closeMobileMenu()" class="btn-relief px-4 py-3 text-sm font-medium" style="color:var(--text-primary);">📊 Estadísticas</a>
+      <a href="#llave" onclick="closeMobileMenu()" class="btn-relief px-4 py-3 text-sm font-medium" style="color:var(--text-primary);">🏆 Llave final</a>
     </nav>
     <div class="mt-8 pt-6 border-t" style="border-color:var(--border-color);">
       <div class="flex items-center justify-between px-2 text-sm" style="color:var(--text-secondary);"><span>Modo</span><span id="mobileThemeLabel">Oscuro</span></div>
-      <button onclick="toggleTheme()" class="mt-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-all" style="background:var(--tab-bg);border:1px solid var(--tab-border);color:var(--text-primary);">Cambiar tema</button>
+      <button onclick="toggleTheme()" class="btn-relief mt-3 w-full px-4 py-2.5 text-sm font-medium" style="color:var(--text-primary);">Cambiar tema</button>
     </div>
   </div>
 
@@ -770,7 +906,7 @@ body {
               style="background:var(--search-bg); color:var(--text-primary); border-color:var(--border-color);"
               onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='var(--border-color)'"
               oninput="handleSearch(this.value)" onkeydown="searchKeydown(event)">
-            <button onclick="clearSearch()" id="searchClear" class="absolute right-2 top-1/2 -translate-y-1/2 hidden p-0.5 rounded hover:bg-white/10 transition-colors" style="color:var(--text-secondary);" aria-label="Limpiar búsqueda">
+            <button onclick="clearSearch()" id="searchClear" class="btn-relief absolute right-2 top-1/2 -translate-y-1/2 hidden p-0.5" style="color:var(--text-secondary);" aria-label="Limpiar búsqueda">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
@@ -786,7 +922,7 @@ body {
         </nav>
         <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema"><span id="themeIcon">🌙</span></button>
-          <button onclick="openMobileMenu()" class="md:hidden p-2 rounded-lg transition-colors" style="color:var(--text-secondary);" aria-label="Abrir menú">
+          <button onclick="openMobileMenu()" class="btn-relief md:hidden p-2" style="color:var(--text-secondary);" aria-label="Abrir menú">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
         </div>
@@ -844,8 +980,8 @@ body {
     <div class="text-center mb-4 sm:mb-6">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2" style="color:var(--text-heading);">Fase de <span style="color:#60a5fa;">Grupos</span></h2>
       <p class="text-xs sm:text-sm" style="color:var(--text-secondary);">12 grupos · 48 selecciones · Los 2 primeros + 8 mejores terceros avanzan</p>
-      <button onclick="toggleCompactMode()" id="compactBtn" class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-        style="background:var(--tab-bg);border:1px solid var(--tab-border);color:var(--text-secondary);">
+      <button onclick="toggleCompactMode()" id="compactBtn" class="btn-relief mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium"
+        style="color:var(--text-secondary);">
         <span id="compactIcon">📋</span> <span id="compactLabel">Vista compacta</span>
       </button>
     </div>
